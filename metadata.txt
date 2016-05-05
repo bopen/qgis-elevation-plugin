@@ -17,7 +17,7 @@ email=office@bopen.eu
 about=The main target of this plugin is to include the functionalities of the elevation script (available at: https://pypi.python.org/pypi/elevation) directly into QGIS.
 
 tracker=BUG_TRACKER_FIXME
-repository=REPOSITORY_FIXME
+repository=https://github.com/bopen/qgis-elevation-plugin.git
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,7 +26,7 @@ repository=REPOSITORY_FIXME
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=
+tags=srtm dem
 
 homepage=www.bopen.eu
 category=Raster
