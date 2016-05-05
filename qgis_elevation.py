@@ -89,8 +89,6 @@ class ElevationPlugin:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&QGIS Elevation Plugin')
-        self.toolbar = self.iface.addToolBar(u'ElevationPlugin')
-        self.toolbar.setObjectName(u'ElevationPlugin')
 
     def open_browse(self):
         fname = QFileDialog.getExistingDirectory(self.dlg, "Select Directory")
@@ -118,7 +116,6 @@ class ElevationPlugin:
         callback,
         enabled_flag=True,
         add_to_menu=True,
-        add_to_toolbar=True,
         status_tip=None,
         whats_this=None,
         parent=None):
@@ -172,9 +169,6 @@ class ElevationPlugin:
         if whats_this is not None:
             action.setWhatsThis(whats_this)
 
-        if add_to_toolbar:
-            self.toolbar.addAction(action)
-
         if add_to_menu:
             self.iface.addPluginToRasterMenu(
                 self.menu,
@@ -200,9 +194,6 @@ class ElevationPlugin:
             self.iface.removePluginRasterMenu(
                 self.tr(u'&QGIS Elevation Plugin'),
                 action)
-            self.iface.removeToolBarIcon(action)
-        # remove the toolbar
-        del self.toolbar
 
     def clear_and_push_message(self, msg, lvl, time):
         self.iface.messageBar().clearWidgets()
