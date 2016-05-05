@@ -1,0 +1,39 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=QGIS Elevation Plugin
+qgisMinimumVersion=2.0
+description=QGIS Python plugin to download global terrain digital elevation models, SRTM 30m DEM and SRTM 90m DEM.
+version=0.1
+author=B-Open Solutions s.r.l
+email=office@bopen.eu
+
+about=The main target of this plugin is to include the functionalities of the elevation script (available at: https://pypi.python.org/pypi/elevation) directly into QGIS.
+
+tracker=BUG_TRACKER_FIXME
+repository=REPOSITORY_FIXME
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=
+
+homepage=www.bopen.eu
+category=Raster
+icon=icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
