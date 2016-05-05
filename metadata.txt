@@ -16,8 +16,8 @@ email=office@bopen.eu
 
 about=The main target of this plugin is to include the functionalities of the elevation script (available at: https://pypi.python.org/pypi/elevation) directly into QGIS.
 
-tracker=BUG_TRACKER_FIXME
-repository=https://github.com/bopen/qgis-elevation-plugin.git
+tracker=https://github.com/bopen/qgis-elevation-plugin/issues
+repository=https://github.com/bopen/qgis-elevation-plugin
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,7 +26,7 @@ repository=https://github.com/bopen/qgis-elevation-plugin.git
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=srtm dem
+tags=download SRTM DEM DTM global digital elevation terrain model
 
 homepage=www.bopen.eu
 category=Raster
