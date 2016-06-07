@@ -9,14 +9,14 @@
 """
 
 __author__ = 'office@bopen.eu'
-__date__ = '2016-04-06'
+__date__ = '2016-06-03'
 __copyright__ = 'Copyright 2016, B-Open Solutions s.r.l'
 
 import unittest
 
 from PyQt4.QtGui import QDialogButtonBox, QDialog
 
-from qgis_elevation_dialog import ElevationPluginDialog
+from qgis_elevation_plugin_dialog import ElevationPluginDialog
 
 from utilities import get_qgis_app
 QGIS_APP = get_qgis_app()
