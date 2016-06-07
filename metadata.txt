@@ -26,9 +26,9 @@ repository=https://github.com/bopen/qgis-elevation-plugin
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=download SRTM DEM DTM global digital elevation terrain model
+tags=
 
-homepage=www.bopen.eu
+homepage=https://github.com/bopen/
 category=Raster
 icon=icon.png
 # experimental flag

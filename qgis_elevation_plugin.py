@@ -3,9 +3,9 @@
 /***************************************************************************
  ElevationPlugin
                                  A QGIS plugin
- QGIS plugin to download global terrain digital elevation models, SRTM 30m DEM and SRTM 90m DEM.
+ QGIS Python plugin to download global terrain digital elevation models, SRTM 30m DEM and SRTM 90m DEM.
                               -------------------
-        begin                : 2016-04-06
+        begin                : 2016-06-03
         git sha              : $Format:%H$
         copyright            : (C) 2016 by B-Open Solutions s.r.l
         email                : office@bopen.eu
@@ -20,18 +20,21 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QObject, SIGNAL
-from PyQt4.QtGui import QAction, QIcon, QFileDialog, QInputDialog
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
+from PyQt4.QtGui import QAction, QIcon, QFileDialog
 # Initialize Qt resources from file resources.py
 import resources
-# Import the code for the dialog
-from qgis_elevation_dialog import ElevationPluginDialog
-import os
-import sys
-import subprocess
+
 from qgis.core import QgsCoordinateReferenceSystem, QgsCoordinateTransform, QgsPoint
 from qgis.gui import QgsMessageBar
 from qgis import utils
+
+import os.path
+import subprocess
+import sys
+import pip
+
+from qgis_elevation_plugin_dialog import ElevationPluginDialog
 
 
 def bounds_from_extent(extent, src_crs):
@@ -61,12 +64,15 @@ class ElevationPlugin:
         self.iface = iface
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
+        self.elevation_dir = os.path.join(self.plugin_dir, 'elevation')
+        print self.elevation_dir
+
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
-            'qgis_elevation_{}.qm'.format(locale))
+            '{}.qm'.format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -79,17 +85,26 @@ class ElevationPlugin:
         self.dlg = ElevationPluginDialog()
         self.dlg.choose_dir_button.clicked.connect(self.open_browse)
 
-        # This is only to make gdal visible, it should be fixed
-        local_path = '/usr/local/bin:'
-        if local_path not in os.environ['PATH']:
-            os.environ['PATH'] = local_path + os.environ['PATH']
-
-        print "eio selfcheck says: " + subprocess.check_output('/opt/local//Library/Frameworks/Python.framework/Versions/2.7/bin/eio selfcheck', shell=True)
-
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&QGIS Elevation Plugin')
 
+        # Making GDAL visible
+        local_path = '/usr/local/bin:'
+        if local_path not in os.environ['PATH']:
+            os.environ['PATH'] = local_path + os.environ['PATH']
+
+        # Checking the presence of elevation library
+        try:
+            import elevation
+            print elevation.util.selfcheck(elevation.datasource.TOOLS)
+        except:
+            self.clear_and_push_message("Installing elevation library!", QgsMessageBar.WARNING, 10)
+            pip.main(['install', '--target=%s' % self.elevation_dir, 'elevation'])
+            if self.elevation_dir not in sys.path:
+                sys.path.append(self.elevation_dir)
+            self.clear_and_push_message("Elevation Library correctly installed!", QgsMessageBar.INFO, 5)
+        
     def open_browse(self):
         fname = QFileDialog.getExistingDirectory(self.dlg, "Select Directory")
         self.dlg.lineEdit_6.setText(fname)
@@ -108,6 +123,7 @@ class ElevationPlugin:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('ElevationPluginDialogBase', message)
+
 
     def add_action(
         self,
@@ -188,6 +204,7 @@ class ElevationPlugin:
             callback=self.run,
             parent=self.iface.mainWindow())
 
+
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -220,15 +237,13 @@ class ElevationPlugin:
 
         if result:
             self.filename = self.dlg.lineEdit_5.text().replace(" ", "")
-            temporary_path = '/opt/local//Library/Frameworks/Python.framework/Versions/2.7/bin/'
-            self.dest_path = os.path.join(self.dlg.lineEdit_6.text(), self.filename)
-            cmd = "%seio clip -o %s.tif --bounds %s %s %s %s" % (temporary_path, self.dest_path, btm_left[0], btm_left[1], top_right[0], top_right[1])
-            print cmd
+            self.dest_path = os.path.join(self.dlg.lineEdit_6.text(), self.filename + '.tif')
+            self.bounds = (btm_left[0], btm_left[1], top_right[0], top_right[1])
             self.clear_and_push_message("DEM data is being downloaded, please wait for the process to complete", QgsMessageBar.WARNING, 10)
-            try:
-                subprocess.check_call(cmd, shell=True)
-                self.clear_and_push_message("Data correctly downloaded", QgsMessageBar.INFO, 5)
-                if self.dlg.preview_checkbox.isChecked():
-                    self.iface.addRasterLayer('%s.tif' % self.dest_path, '%s srtm dem' % self.filename)
-            except:
-                self.clear_and_push_message("The selected area is too wide", QgsMessageBar.WARNING, 5)
+
+            import elevation
+            elevation.datasource.clip(bounds=self.bounds, output=self.dest_path)
+
+            self.clear_and_push_message("Data correctly downloaded", QgsMessageBar.INFO, 5)
+            if self.dlg.preview_checkbox.isChecked():
+            	self.iface.addRasterLayer(self.dest_path, '%s srtm dem' % self.filename)

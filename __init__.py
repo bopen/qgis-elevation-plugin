@@ -3,10 +3,9 @@
 /***************************************************************************
  ElevationPlugin
                                  A QGIS plugin
- QGIS Python plugin to download global terrain digital elevation models, SRTM
- 30m DEM and SRTM 90m DEM.
+ QGIS Python plugin to download global terrain digital elevation models, SRTM 30m DEM and SRTM 90m DEM.
                              -------------------
-        begin                : 2016-04-06
+        begin                : 2016-06-03
         copyright            : (C) 2016 by B-Open Solutions s.r.l
         email                : office@bopen.eu
         git sha              : $Format:%H$
@@ -31,5 +30,6 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :param iface: A QGIS interface instance.
     :type iface: QgsInterface
     """
-    from .qgis_elevation import ElevationPlugin
+    #
+    from .qgis_elevation_plugin import ElevationPlugin
     return ElevationPlugin(iface)

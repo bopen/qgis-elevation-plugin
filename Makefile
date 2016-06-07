@@ -3,7 +3,7 @@
 #
 # QGIS Python plugin to download global terrain digital elevation models, SRTM 30m DEM and SRTM 90m DEM.
 #							 -------------------
-#		begin				: 2016-04-06
+#		begin				: 2016-06-03
 #		git sha				: $Format:%H$
 #		copyright			: (C) 2016 by B-Open Solutions s.r.l
 #		email				: office@bopen.eu
@@ -38,15 +38,15 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	qgis_elevation.py qgis_elevation_dialog.py
+	qgis_elevation_plugin.py qgis_elevation_plugin_dialog.py
 
 PLUGINNAME = ElevationPlugin
 
 PY_FILES = \
 	__init__.py \
-	qgis_elevation.py qgis_elevation_dialog.py
+	qgis_elevation_plugin.py qgis_elevation_plugin_dialog.py
 
-UI_FILES = qgis_elevation_dialog_base.ui
+UI_FILES = qgis_elevation_plugin_dialog_base.ui
 
 EXTRAS = metadata.txt icon.png
 
